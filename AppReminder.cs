@@ -24,49 +24,52 @@ namespace AppointmentReminder
 
         private void DoWork()
         {
-            while (!paused)
+            try
             {
-                // Check to see if it's time to set updates and that we haven't sent them for today
-                //if (Settings.Instance.TimeOfDay.Hour == DateTime.Now.Hour)
-                if(true)
-            {
-                    if (lastCheck.Date != DateTime.Now.Date)
+                while (!paused)
+                {
+                    // Check to see if it's time to set updates and that we haven't sent them for today
+                    if (Settings.Instance.TimeOfDay == DateTime.Now.Hour)
                     {
-                        StartWriter();
-                        apps = new List<Appointment>();
-
-                        LoadAppointments();
-                        CheckValidAppointments();
-                        CheckEmployee();
-
-                        Writer.WriteLine("Found " + apps.Count + " appointments tomorrow.");
-                        Writer.WriteLine("Sending texts.");
-                        Writer.WriteLine("ID\tFirstName\tLastName\tTelephone\tSid");
-
-                        foreach (var item in apps)
+                        if (lastCheck.Date != DateTime.Now.Date)
                         {
-                            string sid = SendText(item);
-                            Writer.WriteLine(item.ID + "\t" + item.FirstName + "\t" + item.LastName + "\t" + item.Telephone + "\t" + sid);
+                            StartWriter();
+                            apps = new List<Appointment>();
+
+                            LoadAppointments();
+                            CheckValidAppointments();
+                            CheckEmployee();
+
+                            Writer.WriteLine("Found " + apps.Count + " appointments tomorrow.");
+                            Writer.WriteLine("Sending texts.");
+                            Writer.WriteLine("ID\tFirstName\tLastName\tTelephone\tSid");
+
+                            foreach (var item in apps)
+                            {
+                                string sid = SendText(item);
+                                Writer.WriteLine(item.ID + "\t" + item.FirstName + "\t" + item.LastName + "\t" + item.Telephone + "\t" + sid);
+                            }
+
+                            Writer.WriteLine("Texting complete.");
+                            lastCheck = DateTime.Now;
+
+                            CloseWriter();
                         }
-
-                        Writer.WriteLine("Texting complete.");
-                        lastCheck = DateTime.Now;
-
-                        CloseWriter();
                     }
+                    Thread.Sleep(1000 * 60 * 10); //10 minutes
                 }
-
-                Thread.Sleep(1000 * 60 * 10); //10 minutes
-
             }
-            
+            catch (Exception ex)
+            {
+                Writer.WriteLine(ex.Message + "\n" + ex.StackTrace);
+                Writer.Close();
+            }
         }
 
         //Load and check apps
         public void LoadAppointments()
         {
             OleDbConnection connection = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + Settings.Instance.DataBasePath + ";");
-
             //Get Apps
             DateTime tomorrow = DateTime.Today.AddDays(1);
             string sqlCmd = "SELECT * from Transactions WHERE StartTime > #" + tomorrow.ToString("d") + " 12:00:00 AM# AND StartTime < #" + tomorrow.ToString("d") + " 11:59:00 PM#";
@@ -107,7 +110,7 @@ namespace AppointmentReminder
                     connection.Dispose();
                 }
             }
-            catch (Exception ex) { Writer.WriteLine("Load Appointments: " + ex.InnerException.Message+ '\t' +ex.Message); }
+            catch (Exception ex) { Writer.WriteLine("Load Appointments: " + ex.InnerException.Message + '\t' + ex.Message); }
 
         }
         public void CheckValidAppointments()
@@ -158,7 +161,7 @@ namespace AppointmentReminder
         {
 
             TwilioRestClient twilio = new TwilioRestClient(Settings.Instance.AccountSID, Settings.Instance.AuthToken);
-            string text = "*REMINDER FROM Z&B*\nYour appointment with {0} at Z&B Accounting is tomorrow at {1}. If you need to cancel your appointment "
+            string text = "*REMINDER FROM Z&B Accounting*\nYour appointment with {0} at Z&B Accounting is tomorrow at {1}. If you need to cancel your appointment "
                             + "do not respond to this message. Please call the office at (305) 557-2389.";
             string message = string.Format(text, app.Employee, app.StartTime.ToString("t"));
 
@@ -172,7 +175,7 @@ namespace AppointmentReminder
         //Writer
         private void StartWriter()
         {
-            Writer = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + @"Logs\" + DateTime.Now.ToString("g").Replace("/", "-").Replace(":", ".") + ".txt");
+            Writer = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + @"Logs\" + DateTime.Now.ToString("yyyy-MM-dd h.mm tt") + ".txt");
             Writer.AutoFlush = true;
         }
         private void CloseWriter()
@@ -191,7 +194,7 @@ namespace AppointmentReminder
             if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "Logs"))
                 Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Logs");
 
-            ////Load Settings
+            //Load Settings
             if (!Settings.LoadSettings())
                 Environment.Exit(1);
 
@@ -201,6 +204,7 @@ namespace AppointmentReminder
 
             worker = new Thread(DoWork);
             worker.Start();
+
 #endif
         }
         protected override void OnStop()

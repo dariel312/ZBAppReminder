@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.OleDb;
 using System.IO;
 using System.ServiceProcess;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using Twilio;
@@ -15,196 +16,30 @@ namespace AppointmentReminder
         private Thread worker;
         private DateTime lastCheck;
         private StreamWriter Writer;
-        private static List<Appointment> apps = new List<Appointment>();
+
+        //Entities
+        private List<Transaction> apps;
+        private List<Customer> customers;
+        private List<Employee> employees;
 
         public AppReminder()
         {
             InitializeComponent();
         }
-
-        private void DoWork()
-        {
-            try
-            {
-                while (!paused)
-                {
-                    // Check to see if it's time to set updates and that we haven't sent them for today
-                    if (Settings.Instance.TimeOfDay == DateTime.Now.Hour)
-                    {
-                        if (lastCheck.Date != DateTime.Now.Date)
-                        {
-                            StartWriter();
-                            apps = new List<Appointment>();
-
-                            LoadAppointments();
-                            CheckValidAppointments();
-                            CheckEmployee();
-
-                            Writer.WriteLine("Found " + apps.Count + " appointments tomorrow.");
-                            Writer.WriteLine("Sending texts.");
-                            Writer.WriteLine("ID\tFirstName\tLastName\tTelephone\tSid");
-
-                            foreach (var item in apps)
-                            {
-                                string sid = SendText(item);
-                                Writer.WriteLine(item.ID + "\t" + item.FirstName + "\t" + item.LastName + "\t" + item.Telephone + "\t" + sid);
-                            }
-
-                            Writer.WriteLine("Texting complete.");
-                            lastCheck = DateTime.Now;
-
-                            CloseWriter();
-                        }
-                    }
-                    Thread.Sleep(1000 * 60 * 10); //10 minutes
-                }
-            }
-            catch (Exception ex)
-            {
-                Writer.WriteLine(ex.Message + "\n" + ex.StackTrace);
-                Writer.Close();
-            }
-        }
-
-        //Load and check apps
-        public void LoadAppointments()
-        {
-            OleDbConnection connection = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + Settings.Instance.DataBasePath + ";");
-            //Get Apps
-            DateTime tomorrow = DateTime.Today.AddDays(1);
-            string sqlCmd = "SELECT * from Transactions WHERE StartTime > #" + tomorrow.ToString("d") + " 12:00:00 AM# AND StartTime < #" + tomorrow.ToString("d") + " 11:59:00 PM#";
-
-            try
-            {
-                connection.Open();
-                OleDbCommand cmd = new OleDbCommand(sqlCmd, connection, connection.BeginTransaction());
-                OleDbDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    int id = (int)reader["CustID"];
-
-                    Appointment a = new Appointment();
-                    a.StartTime = (DateTime)reader["StartTime"];
-                    a.EmpID = (int)reader["EmpID"];
-
-                    a.ID = id;
-
-                    apps.Add(a);
-                }
-
-                foreach (Appointment item in apps)
-                {
-                    connection = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + Settings.Instance.DataBasePath + ";");
-                    connection.Open();
-                    OleDbCommand cmd1 = new OleDbCommand("SELECT * from Customers WHERE CustID = " + item.ID, connection, connection.BeginTransaction());
-                    reader = cmd1.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        item.FirstName = (string)reader["FirstName"];
-                        item.LastName = (string)reader["LastName"];
-                        item.Telephone = (string)reader["Phone"];
-                    }
-
-                    connection.Dispose();
-                }
-            }
-            catch (Exception ex) { Writer.WriteLine("Load Appointments: " + ex.InnerException.Message + '\t' + ex.Message); }
-
-        }
-        public void CheckValidAppointments()
-        {
-            List<Appointment> removals = new List<Appointment>();
-
-            foreach (Appointment item in apps)
-            {
-                string number = item.Telephone.Replace("-", "").Replace(" ", "").Replace("+", "");
-                byte[] chars = Encoding.ASCII.GetBytes(number.ToCharArray());
-
-                //Remove if empty or has letters
-                if (number == "")
-                    removals.Add(item);
-                else
-                {
-                    foreach (char digit in chars)
-                    {
-                        //Make sure all digits are numbers
-                        if (digit < 48 || digit > 57)
-                        {
-                            removals.Add(item);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            //Remove invalid Appointments
-            foreach (Appointment item in removals)
-                apps.Remove(item);
-
-        }
-        public void CheckEmployee()
-        {
-            foreach (var item in apps)
-            {
-                if (item.EmpID == 470)
-                    item.Employee = "Lorena";
-                else if (item.EmpID == 471)
-                    item.Employee = "Lina";
-
-            }
-        }
-
-        //Twilio
-        public static string SendText(Appointment app)
-        {
-
-            TwilioRestClient twilio = new TwilioRestClient(Settings.Instance.AccountSID, Settings.Instance.AuthToken);
-            string text = "*REMINDER FROM Z&B Accounting*\nYour appointment with {0} at Z&B Accounting is tomorrow at {1}. If you need to cancel your appointment "
-                            + "do not respond to this message. Please call the office at (305) 557-2389.";
-            string message = string.Format(text, app.Employee, app.StartTime.ToString("t"));
-
-            Message twilioMessage = twilio.SendMessage(Settings.Instance.TwilioPhone, app.Telephone, message, new string[0], "");
-
-            if (twilioMessage.Status == "Failed")
-                return twilioMessage.ErrorMessage;
-            else return twilioMessage.Sid;
-        }
-
-        //Writer
-        private void StartWriter()
-        {
-            Writer = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + @"Logs\" + DateTime.Now.ToString("yyyy-MM-dd h.mm tt") + ".txt");
-            Writer.AutoFlush = true;
-        }
-        private void CloseWriter()
-        {
-            Writer.Close();
-        }
-
-        //Service
         public void OnDebug()
         {
             OnStart(null);
         }
         protected override void OnStart(string[] args)
         {
-
             if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "Logs"))
                 Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Logs");
 
-            //Load Settings
-            if (!Settings.LoadSettings())
-                Environment.Exit(1);
-
 #if DEBUG
-            DoWork();
+            doWork();
 #else
-
-            worker = new Thread(DoWork);
+            worker = new Thread(doWork);
             worker.Start();
-
 #endif
         }
         protected override void OnStop()
@@ -212,6 +47,119 @@ namespace AppointmentReminder
             worker.Abort();
         }
 
+
+        private void doWork()
+        {
+            while (!paused)
+            {
+
+                // Check to see if it's time to set updates and that we haven't sent them for today
+                if (Properties.Settings.Default.TimeOfDay == DateTime.Now.Hour)
+                {
+                    if (lastCheck.Date != DateTime.Now.Date)
+                    {
+                        try
+                        {
+                            openWriter();
+                            update();
+                            closeWriter();
+                        }
+                        catch(Exception ex)
+                        {
+                            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"Logs\Error " + DateTime.Now.ToString("yyyy-MM-dd h.mm tt") + ".txt", ex.ToString());
+                            sendText(Properties.Settings.Default.ErrorLogPhone, ex.ToString());
+                        }
+                    }
+                }
+                Thread.Sleep(1000 * 60 * 10); //10 minutes
+            }
+
+        }
+        private void update()
+        {
+            apps = DataProvider.GetAppointments().ToList();
+            customers = DataProvider.GetCustomers().ToList();
+            employees = DataProvider.GetEmployees().ToList();
+
+            transactionMergeCustomer();
+            transactionMergeEmployee();
+            apps = checkValidApps(apps);
+
+            Writer.WriteLine("Found " + apps.Count + " appointments tomorrow.");
+            Writer.WriteLine("ID\tFirstName\tLastName\tTelephone\tSid");
+
+            //Send texts
+            foreach (var item in apps)
+            {
+                string sid = sendReminder(item);
+                Writer.WriteLine(item.CustomerID + "\t" + item.Customer.FirstName + "\t" + item.Customer.LastName + "\t" + item.Customer.Telephone + "\t" + sid);
+            }
+
+            lastCheck = DateTime.Now;
+        }
+        private void transactionMergeCustomer()
+        {
+            foreach (var app in apps)
+                app.Customer = customers.First(m => app.CustomerID == m.CustomerID);
+        }
+        private void transactionMergeEmployee()
+        {
+            foreach (var app in apps)
+                app.Employee = employees.First(m => app.EmployeeID == m.EmployeeID);
+        }
+        private List<Transaction> checkValidApps(List<Transaction> apps)
+        {
+            List<Transaction> removals = new List<Transaction>();
+
+            foreach (Transaction item in apps)
+            {
+                string number = item.Customer.Telephone.Replace("-", "").Replace(" ", "").Replace("+", "");
+                long num = 0;
+                //Remove if empty or has letters
+                if (number == "" || !long.TryParse(number, out num))
+                    removals.Add(item);
+            }
+
+            //Remove invalid Appointments
+            foreach (Transaction item in removals)
+                apps.Remove(item);
+
+            return apps;
+        }
+        private static string sendReminder(Transaction app)
+        {
+            var twilio = new TwilioRestClient(Properties.Settings.Default.AccountSID, Properties.Settings.Default.AuthToken);
+            string text = Properties.Settings.Default.ReminderMessage.Replace("\\n", "\n");
+            string message = string.Format(text, app.Employee.FirstName, app.StartTime.ToString("t"));
+
+            Message twilioMessage = twilio.SendMessage(Properties.Settings.Default.TwilioPhone, app.Customer.Telephone, message, new string[0], "");
+
+            if (twilioMessage.Status == "Failed")
+                return twilioMessage.ErrorMessage;
+            else
+                return twilioMessage.Sid;
+        }
+        private static string sendText(string to, string message)
+        {
+            var twilio = new TwilioRestClient(Properties.Settings.Default.AccountSID, Properties.Settings.Default.AuthToken);
+            Message twilioMessage = twilio.SendMessage(Properties.Settings.Default.TwilioPhone, to, message, new string[0], "");
+
+            if (twilioMessage.Status == "Failed")
+                return twilioMessage.ErrorMessage;
+            else
+                return twilioMessage.Sid;
+        }
+        private void openWriter()
+        {
+            Writer = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + @"Logs\" + DateTime.Now.ToString("yyyy-MM-dd h.mm tt") + ".txt");
+            Writer.AutoFlush = true;
+        }
+        private void closeWriter()
+        {
+            Writer.Close();
+        }
+
+       
 
 
     }

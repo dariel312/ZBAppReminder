@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminder.WinService", "AppointmentReminder\AppointmentReminder.WinService.csproj", "{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminder.Test", "AppointmentReminder.Test\AppointmentReminder.Test.csproj", "{CED027E0-A92E-4349-8166-47E0B8A186AE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminder.Core", "AppointmentReminder.Core\AppointmentReminder.Core.csproj", "{9521A277-1E29-4492-929B-A2759704C647}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminder.CLI", "AppointmentReminder.CLI\AppointmentReminder.CLI.csproj", "{CED027E0-A92E-4349-8166-47E0B8A186AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminder.WinService", "AppointmentReminder.WinService\AppointmentReminder.WinService.csproj", "{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminder.Test", "AppointmentReminder.Test\AppointmentReminder.Test.csproj", "{D71AB467-1906-4E32-848C-621DE69D07AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +17,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CED027E0-A92E-4349-8166-47E0B8A186AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CED027E0-A92E-4349-8166-47E0B8A186AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CED027E0-A92E-4349-8166-47E0B8A186AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CED027E0-A92E-4349-8166-47E0B8A186AE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9521A277-1E29-4492-929B-A2759704C647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9521A277-1E29-4492-929B-A2759704C647}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9521A277-1E29-4492-929B-A2759704C647}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9521A277-1E29-4492-929B-A2759704C647}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CED027E0-A92E-4349-8166-47E0B8A186AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CED027E0-A92E-4349-8166-47E0B8A186AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CED027E0-A92E-4349-8166-47E0B8A186AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CED027E0-A92E-4349-8166-47E0B8A186AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D71AB467-1906-4E32-848C-621DE69D07AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D71AB467-1906-4E32-848C-621DE69D07AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D71AB467-1906-4E32-848C-621DE69D07AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D71AB467-1906-4E32-848C-621DE69D07AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

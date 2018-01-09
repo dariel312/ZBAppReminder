@@ -25,7 +25,7 @@ namespace AppointmentReminder.Core
             this.db = new DataProvider(config.DataBasePath);
             TwilioClient.Init(config.AccountSID, config.AuthToken);
         }
-        public void CheckSendReminders()
+        public void CheckSendTextReminders()
         {
             var tomorrow = DateTime.Today.AddDays(1);
             var appts = db.GetAppointments(tomorrow, tomorrow).ToList();
@@ -74,22 +74,8 @@ namespace AppointmentReminder.Core
         {
             string text = config.ReminderMessage.Replace("\\n", "\n");
             string message = string.Format(text, app.Employee.FirstName, app.StartTime.ToString("t"));
-            var to = new PhoneNumber(app.Customer.Telephone);
-            var from = new PhoneNumber(config.TwilioPhone);
 
-            var msg = MessageResource.Create(
-                     from: from,
-                     to: to,
-                     body: message);
-
-            //var call = CallResource.Create(to,
-            //                          from,
-            //                          url: new Uri("http://dariel.io/zb_reminder.aspx"));
-
-            if (msg.Status == MessageResource.StatusEnum.Failed)
-                return msg.ErrorMessage;
-            else
-                return msg.Sid;
+            return PhoneService.SendMessage(app.Customer.Telephone, config.TwilioPhone, message);
         }
 
     }

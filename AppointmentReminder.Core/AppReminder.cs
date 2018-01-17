@@ -29,15 +29,16 @@ namespace AppointmentReminder.Core
         {
             var tomorrow = DateTime.Today.AddDays(1);
             var appts = db.GetAppointments(tomorrow, tomorrow).ToList();
-            var customers = db.GetCustomers().ToList();
             var employees = db.GetEmployees().ToList();
-
-            //Merge refrences
-            foreach (var app in appts)
-                app.Customer = customers.First(m => app.CustomerID == m.CustomerID);
+            //var customers = db.GetCustomers().ToList();
+            //Merge refrences -- no longer needed, QUERY includes customers already
+            //foreach (var app in appts)
+            //    app.Customer = customers.First(m => app.CustomerID == m.CustomerID);
 
             foreach (var app in appts)
                 app.Employee = employees.First(m => app.EmployeeID == m.EmployeeID);
+
+            appts = checkValidApps(appts);
 
             Output.WriteLine($"Found { appts.Count } appointments tomorrow.");
             Output.WriteLine("ID\tFirstName\tLastName\tTelephone\tSid");
@@ -60,7 +61,7 @@ namespace AppointmentReminder.Core
                 long num = 0;
 
                 //Remove if empty or has letters
-                if (number == "" || !long.TryParse(number, out num))
+                if (number == string.Empty || !long.TryParse(number, out num))
                     removals.Add(item);
             }
 

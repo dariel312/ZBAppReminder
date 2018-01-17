@@ -17,16 +17,17 @@ namespace AppointmentReminder.CLI
             var config = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(baseDir + "settings.json"));
             var reminder = new AppReminder(config);
 
-            try
-            {
-                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + Logs.LogFolderName))
-                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + Logs.LogFolderName);
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + Logs.LogFolderName))
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + Logs.LogFolderName);
 
 #if DEBUG
-                reminder.Output = Console.Out; //For testing output to console
+            reminder.Output = Console.Out; //For testing output to console
+            reminder.CheckSendTextReminders();
+            Console.ReadLine();
 #else
+            try
+            {
                 reminder.Output = File.CreateText(baseDir + Logs.LogFolderName + '/' + DateTime.Now.ToString(Logs.LogNameFormat) + Logs.LogFileExtension);
-#endif
                 reminder.CheckSendTextReminders();
             }
             catch (Exception ex)
@@ -34,11 +35,7 @@ namespace AppointmentReminder.CLI
                 File.WriteAllText(baseDir + Logs.LogFolderName + @"/Error " + DateTime.Now.ToString(Logs.LogNameFormat) + Logs.LogFileExtension, ex.ToString());
                 PhoneService.SendMessage(config.ErrorLogPhone, config.TwilioPhone, ex.ToString());
             }
-
-#if DEBUG
-            Console.ReadLine();
-#else
-            reminder.Output.Close();
+             reminder.Output.Close();
 #endif
         }
     }

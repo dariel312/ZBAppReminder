@@ -18,12 +18,17 @@ namespace AppointmentReminder.Core
         }
 
 
-
+        /// <summary>
+        /// Gets all appointments with customers and employee info.
+        /// </summary>
+        /// <param name="StartTime"></param>
+        /// <param name="EndTime"></param>
+        /// <returns></returns>
         public ICollection<Transaction> GetAppointments(DateTime StartTime, DateTime EndTime)
         {
             var apps = new List<Transaction>();
-         
-            var sqlCmd = "SELECT * from Transactions WHERE StartTime > #" + StartTime.ToString("d") + " 12:00:00 AM# AND StartTime < #" + EndTime.ToString("d") + " 11:59:00 PM#";
+
+            var sqlCmd = "SELECT Transactions.*, Customers.* FROM Transactions INNER JOIN Customers ON Transactions.CustID = Customers.CustID WHERE StartTime > #" + StartTime.ToString("d") + " 12:00:00 AM# AND StartTime < #" + EndTime.ToString("d") + " 11:59:00 PM# ";
 
             OleDbDataReader reader = null;
             using (executeQuery(sqlCmd, out reader))
@@ -35,7 +40,16 @@ namespace AppointmentReminder.Core
                         TransactionID = (int)reader["TranID"],
                         StartTime = (DateTime)reader["StartTime"],
                         EmployeeID = (int)reader["EmpID"],
-                        CustomerID = (int)reader["CustID"]
+                        CustomerID = (int)reader["Transactions.CustID"],
+                        Customer = new Customer()
+                        {
+                            CustomerID = (int)reader["Customers.CustID"],
+                            FirstName = (string)reader["FirstName"],
+                            LastName = (string)reader["LastName"],
+                            Telephone = (string)reader["Phone"]
+                        }
+
+
                     };
 
                     apps.Add(tran);
@@ -44,6 +58,11 @@ namespace AppointmentReminder.Core
 
             return apps;
         }
+
+        /// <summary>
+        /// Gets all customers
+        /// </summary>
+        /// <returns></returns>
         public ICollection<Customer> GetCustomers()
         {
             var cust = new List<Customer>();
@@ -61,6 +80,11 @@ namespace AppointmentReminder.Core
             }
             return cust;
         }
+
+        /// <summary>
+        /// Gets all employees
+        /// </summary>
+        /// <returns></returns>
         public ICollection<Employee> GetEmployees()
         {
             var employees = new List<Employee>();

@@ -58,10 +58,9 @@ namespace AppointmentReminder.Core
             foreach (Transaction item in apps)
             {
                 string number = item.Customer.Telephone.Replace("-", "").Replace(" ", "").Replace("+", "");
-                long num = 0;
 
                 //Remove if empty or has letters
-                if (number == string.Empty || !long.TryParse(number, out num))
+                if (number == string.Empty || !long.TryParse(number, out var num))
                     removals.Add(item);
             }
 

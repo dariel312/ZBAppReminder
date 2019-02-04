@@ -1,0 +1,20 @@
+﻿<script type="text/ng-template" id="error-messages-summary">
+    <div class="text-danger" ng-message="number">Form contains an invalid number.</div>
+    <div class="text-danger" ng-message="email">Fields contain an invalid email.</div>
+    <span class="text-danger" ng-message="date">Dates must be valid and of the format YYYY-MM-DD or MM/DD/YYYY.</span>
+    <span class="text-danger" ng-message="time">Times must be of the 24 hour format HH:MM:SS.</span>
+    <span class="text-danger" ng-message="datelist">Date list must a comma seperated list of dates be of the format MM/DD/YYYY, MM/DD/YYYY - MM/DD/YYYY</span>
+    <span class="text-danger" ng-message="required">Fields cannot be empty.</span>
+</script>
+<script type="text/ng-template" id="error-messages-field">
+    <div class="text-danger" ng-message="number">Invalid number</div>
+    <div class="text-danger" ng-message="email">Invalid email</div>
+    <span class="text-danger" ng-message="date">Invalid date</span>
+    <span class="text-danger" ng-message="time">Invalid time</span>
+    <div class="text-danger" ng-message="min">This field is too small</div>
+    <div class="text-danger" ng-message="max">This field is too large</div>
+    <div class="text-danger" ng-message="minlength">This field is too short</div>
+    <div class="text-danger" ng-message="maxlength">This field is too long</div>
+    <div class="text-danger" ng-message="datelist">Ex. MM/DD/YYYY, MM/DD/YYYY - MM/DD/YYYY</div>
+    <div class="text-danger" ng-message="required">This field is required</div>
+</script>

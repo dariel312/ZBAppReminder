@@ -63,7 +63,7 @@ namespace AppointmentReminder.WinService
                         //try
                         //{
                             openWriter();
-                            reminder.CheckSendTextReminders();
+                            reminder.CheckSendTextReminders(DateTime.Now, DateTime.Now);
                             closeWriter();
                         //}
                         //catch(Exception ex)

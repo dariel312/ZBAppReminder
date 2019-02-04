@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppointmentReminder.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Twilio;
+using Twilio.Exceptions;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
@@ -17,23 +19,18 @@ namespace AppointmentReminder.Core
 
 
         private AppSettings config;
-        private DataProvider db;
+        private AppManagerDB db;
 
         public AppReminder(AppSettings Config)
         {
             this.config = Config;
-            this.db = new DataProvider(config.DataBasePath);
+            this.db = new AppManagerDB(config.DataBasePath);
             TwilioClient.Init(config.AccountSID, config.AuthToken);
         }
-        public void CheckSendTextReminders()
+        public void CheckSendTextReminders(DateTime StartDay, DateTime EndDay)
         {
-            var tomorrow = DateTime.Today.AddDays(1);
-            var appts = db.GetAppointments(tomorrow, tomorrow).ToList();
+            var appts = db.GetAppointments(StartDay, EndDay).ToList();
             var employees = db.GetEmployees().ToList();
-            //var customers = db.GetCustomers().ToList();
-            //Merge refrences -- no longer needed, QUERY includes customers already
-            //foreach (var app in appts)
-            //    app.Customer = customers.First(m => app.CustomerID == m.CustomerID);
 
             foreach (var app in appts)
                 app.Employee = employees.First(m => app.EmployeeID == m.EmployeeID);
@@ -46,8 +43,15 @@ namespace AppointmentReminder.Core
             //Send texts
             foreach (var item in appts)
             {
-                string sid = sendReminder(item);
-                Output.WriteLine(item.CustomerID + "\t" + item.Customer.FirstName + "\t" + item.Customer.LastName + "\t" + item.Customer.Telephone + "\t" + sid);
+                try
+                {
+                    string sid = sendReminder(item);
+                    Output.WriteLine(item.CustomerID + "\t" + item.Customer.FirstName + "\t" + item.Customer.LastName + "\t" + item.Customer.Telephone + "\t" + sid);
+                }
+                catch(TwilioException ex)
+                {
+                    Output.WriteLine($"Error sending text to {item.Customer.FirstName} {item.Customer.LastName} - {item.Customer.Telephone}. Message: {ex.Message}");
+                }
             }
         }
 

@@ -10,7 +10,9 @@ namespace AppointmentReminder.WinService
 {
     static class Program
     {
-
+        /*
+         * THIS PROJECT HAS BEEN REPLACED IN FAVOR OF TEH CLI
+         */
         static void Main()
         {
 #if DEBUG
@@ -19,7 +21,7 @@ namespace AppointmentReminder.WinService
             Thread.Sleep(Timeout.Infinite);
 #else
             ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]{new AppReminder()};
+            ServicesToRun = new ServiceBase[]{new ReminderService()};
             ServiceBase.Run(ServicesToRun);
 #endif
         }

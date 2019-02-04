@@ -1,0 +1,41 @@
+﻿@page
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <base href="/" />
+    <title>Z&B Appointment Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/app.min.css" rel="stylesheet" />
+</head>
+<body ng-model-options="{'timezone': 'UTC'}">
+    <app-navbar></app-navbar>
+    <ui-view></ui-view>
+    <environment include="Development">
+        <script src="~/js/angular-bundled.js"></script>
+        <script src="~/js/tlmd.paginator.js"></script>
+        <script src="~/js/app.js"></script>
+        <script>
+            const ENVIRONMENT = "DEV";
+        </script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/angular-bundled.min.js" asp-append-version="true"></script>
+        <script src="~/js/tlmd.paginator.js" asp-append-version="true"></script>
+        <script src="~/js/app.min.js" asp-append-version="true"></script>
+
+        <script>
+            const ENVIRONMENT = "PROD";
+        </script>
+    </environment>
+
+    @*Errors for angular*@
+    @Html.Partial("_Error.cshtml")
+
+</body>
+</html>

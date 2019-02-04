@@ -20,15 +20,16 @@ namespace AppointmentReminder.CLI
             if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + Logs.LogFolderName))
                 Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + Logs.LogFolderName);
 
+            var tomorrow = DateTime.Now.AddDays(1);
 #if DEBUG
             reminder.Output = Console.Out; //For testing output to console
-            reminder.CheckSendTextReminders();
+            reminder.CheckSendTextReminders(tomorrow, tomorrow);
             Console.ReadLine();
 #else
             try
             {
                 reminder.Output = File.CreateText(baseDir + Logs.LogFolderName + '/' + DateTime.Now.ToString(Logs.LogNameFormat) + Logs.LogFileExtension);
-                reminder.CheckSendTextReminders();
+                reminder.CheckSendTextReminders(tomorrow, tomorrow);
             }
             catch (Exception ex)
             {

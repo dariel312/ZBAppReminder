@@ -1,0 +1,68 @@
+﻿<div class="container-fluid content-main">
+    <div class="row">
+        <div class="col col-md-3">
+            <div class="row">
+                <div class="col-6 form-group">
+                    <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#searchBox">
+                        Filters 
+                        <i class="material-icons align-middle">keyboard_arrow_down</i>
+                    </button>
+                </div>
+                <div class="col">
+                    <div class="d-flex flex-column">
+                        <div class="dropdown mt-2">
+                            <button class="btn btn-light btn-icon float-right" type="button" data-toggle="dropdown">
+                                <i class="material-icons align-middle">more_vert</i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" ui-sref="film.import">Import</a>
+                                <a class="dropdown-item" ui-sref="film-reconcile">Reconcile</a>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <!--<button ui-sref="film.view({id: 'new'})" class="btn btn-primary float-right">New</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="collapse" id="searchBox">
+                        <div class="card card-body">
+
+                            <form ng-submit="$ctrl.search()">
+                                <div class="row">
+                                    <div class="col form-group">
+                                        <label>By Title</label>
+                                        <input ng-model="$ctrl.model.title" class="form-control" />
+                                    </div>
+                                    <div class="col form-group">
+                                        <label>By Legacy #</label>
+                                        <input ng-model="$ctrl.model.legacyNumber" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <button class="btn btn-primary" type="submit">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-repeat="n in $ctrl.filmsFiltered | paginator: $ctrl.paginator" ui-sref="film.view({id: n.id})">
+                {{n.title}}
+                <hr />
+            </div>
+            <div>
+                <paginator paginator="$ctrl.paginator" array="$ctrl.filmsFiltered" show-pages="true" />
+            </div>
+        </div>
+        <div class="col">
+            <ui-view></ui-view>
+        </div>
+    </div>
+</div>
+

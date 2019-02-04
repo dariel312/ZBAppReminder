@@ -1,0 +1,155 @@
+﻿@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+
+@import "_variables.scss";
+@import "_card.scss";
+@import "_navbar.scss";
+@import "_text.scss";
+@import "_paginator.scss";
+
+/*Scroll bar*/
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+html {
+    font-size: 0.855rem;
+}
+
+body {
+    font-family: $font-default;
+    color: #111111;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
+    font-family: $font-default;
+}
+
+.required-field::after {
+    content: '*';
+    color: red
+}
+
+.content-main {
+    margin-top: $navbar-height + 0.6rem;
+}
+
+.col-padded {
+    padding: 0 15px;
+}
+
+.btn-icon {
+    font-size: 0;
+    padding: 0px;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 2px;
+}
+
+.img-circle {
+    border-radius: 50%;
+}
+
+.modal-header {
+    border: none;
+}
+
+.modal-footer {
+    border: none;
+}
+
+.freeze-scroll {
+    overflow-y: hidden;
+}
+
+.scroll-y {
+    overflow-y: scroll;
+}
+
+.font-small {
+    font-size: 0.8rem;
+}
+
+.text-condensed {
+    font-family: $font-condensed;
+}
+
+/*Dropdown*/
+.dropdown-menu {
+    border: none;
+    box-shadow: $shadow-d3;
+}
+
+@media (min-width: 1200px) {
+    /*To override container fluid on large screen*/
+    .container-lg {
+        max-width: 1140px;
+    }
+}
+
+ui-view {
+    opacity: 1;
+    display: block;
+
+    &.ng-animate {
+        opacity: 1;
+    }
+
+    &.ng-enter {
+        transition: 0.15s $bezier-aceleration;
+        opacity: 0;
+    }
+
+    &.ng-enter-active {
+        opacity: 1;
+    }
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.placeholder {
+    display: block;
+    border-radius: 0.25rem;
+    background-color: #e0e0e0;
+    width: 100%;
+}
+
+/*html {
+    font-size: 1rem;
+}
+
+ @media screen and (min-width: $grid-sm) {
+    html {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (min-width:$grid-md) {
+    html {
+        font-size: 1.4rem;
+    }
+}
+
+@media screen and (min-width:$grid-lg) {
+    html {
+        font-size: 1.6rem;
+    }
+}*/

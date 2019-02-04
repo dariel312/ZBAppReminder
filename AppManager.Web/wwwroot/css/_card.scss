@@ -1,0 +1,47 @@
+﻿@import "_variables.scss";
+
+/*post card view*/
+.card-post-title {
+    font-size: 1.20rem;
+}
+
+.card-actions {
+    a {
+        color: #585858;
+    }
+}
+
+.card-body {
+    padding: 1rem 1.25rem;
+}
+
+.card-misc-info {
+    /*font-size: 0.9rem;*/
+    span:not(:last-child)::after,
+    a:not(:last-child)::after,
+    div:not(:last-child)::after {
+        content: ' \2022'
+    }
+}
+
+.card-header {
+    margin: -1px; /*Fix for that ugly line border thing*/
+    border: none;
+}
+
+.card-img-top > img {
+
+}
+
+.card-img-left {
+    margin-left: 10px;
+    border-radius: 0.25rem;
+    padding: 0;
+
+    img {
+        display: block;
+        margin-top: auto;
+        margin-bottom: auto;
+        border-radius: 0.25rem;
+    }
+}

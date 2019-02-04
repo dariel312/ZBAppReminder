@@ -56,11 +56,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ApptDB.mdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\AppointmentReminder.Core\AppointmentReminder.Core.csproj">
       <Project>{9521a277-1e29-4492-929b-a2759704c647}</Project>
       <Name>AppointmentReminder.Core</Name>

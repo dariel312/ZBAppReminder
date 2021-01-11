@@ -17,6 +17,7 @@ namespace AppointmentReminder.CLI
             var config = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(baseDir + "settings.json"));
             var reminder = new AppReminder(config);
 
+            //check create logs folder
             if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + Logs.LogFolderName))
                 Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + Logs.LogFolderName);
 

@@ -8,6 +8,9 @@ using Twilio.Types;
 
 namespace AppointmentReminder.Core
 {
+   /// <summary>
+   /// Allows Sending Messages\Phone calls
+   /// </summary>
     public static class PhoneService
     {
         public static string SendMessage(string To, string From, string Message)

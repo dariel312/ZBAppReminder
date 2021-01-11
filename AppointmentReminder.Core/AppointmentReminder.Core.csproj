@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppManagerDB.cs" />
-    <Compile Include="AppReminder.cs" />
+    <Compile Include="ZBAppReminder.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Logs.cs" />

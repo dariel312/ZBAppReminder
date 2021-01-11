@@ -15,7 +15,7 @@ namespace AppointmentReminder.CLI
         {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
             var config = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(baseDir + "settings.json"));
-            var reminder = new AppReminder(config);
+            var reminder = new ZBAppReminder(config);
 
             //check create logs folder
             if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + Logs.LogFolderName))
@@ -23,6 +23,7 @@ namespace AppointmentReminder.CLI
 
             var tomorrow = DateTime.Now.AddDays(1);
 #if DEBUG
+            tomorrow = new DateTime(2020, 12, 1);
             reminder.Output = Console.Out; //For testing output to console
             reminder.CheckSendTextReminders(tomorrow, tomorrow);
             Console.ReadLine();

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminder.Core", "AppointmentReminder.Core\AppointmentReminder.Core.csproj", "{9521A277-1E29-4492-929B-A2759704C647}"
 EndProject
@@ -9,11 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminder.CLI", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminder.WinService", "AppointmentReminder.WinService\AppointmentReminder.WinService.csproj", "{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentReminder.Test", "AppointmentReminder.Test\AppointmentReminder.Test.csproj", "{D71AB467-1906-4E32-848C-621DE69D07AD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppManager.DB", "AppointmentReminder.DB\AppManager.DB.csproj", "{27049376-B1D3-418A-800D-0794F6084A05}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppManager.Web", "AppManager.Web\AppManager.Web.csproj", "{1B56010D-DD19-4844-8CBE-E7327D7A44E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,18 +29,10 @@ Global
 		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10B7C718-9AD5-4D0A-A2A7-FEA3AC725928}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D71AB467-1906-4E32-848C-621DE69D07AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D71AB467-1906-4E32-848C-621DE69D07AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D71AB467-1906-4E32-848C-621DE69D07AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D71AB467-1906-4E32-848C-621DE69D07AD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{27049376-B1D3-418A-800D-0794F6084A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{27049376-B1D3-418A-800D-0794F6084A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27049376-B1D3-418A-800D-0794F6084A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27049376-B1D3-418A-800D-0794F6084A05}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B56010D-DD19-4844-8CBE-E7327D7A44E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B56010D-DD19-4844-8CBE-E7327D7A44E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B56010D-DD19-4844-8CBE-E7327D7A44E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B56010D-DD19-4844-8CBE-E7327D7A44E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

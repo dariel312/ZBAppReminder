@@ -18,7 +18,7 @@ namespace AppointmentReminder.WinService
         private Thread worker;
         private DateTime lastCheck;
         private TextWriter Writer;
-        private AppReminder reminder;
+        private ZBAppReminder reminder;
         private ServiceAppSettings config;
 
         public ReminderService()
@@ -35,7 +35,7 @@ namespace AppointmentReminder.WinService
                 Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Logs");
 
             config = JsonConvert.DeserializeObject<ServiceAppSettings>(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "settings.json"));
-            reminder = new AppReminder(config);
+            reminder = new ZBAppReminder(config);
 
 #if DEBUG
             doWork();

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace AppointmentReminder.Core
 {
-    public class AppManagerDB
+    public class AppointmentDBContext
     {
         string connectionString;
 
 
-        public AppManagerDB(string FilePath)
+        public AppointmentDBContext(string FilePath)
         {
             connectionString = $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={ FilePath };";
         }

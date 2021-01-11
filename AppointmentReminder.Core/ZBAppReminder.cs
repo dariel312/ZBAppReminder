@@ -19,12 +19,12 @@ namespace AppointmentReminder.Core
 
 
         private AppSettings config;
-        private AppManagerDB db;
+        private AppointmentDBContext db;
 
         public ZBAppReminder(AppSettings Config)
         {
             this.config = Config;
-            this.db = new AppManagerDB(config.DataBasePath);
+            this.db = new AppointmentDBContext(config.DataBasePath);
             TwilioClient.Init(config.AccountSID, config.AuthToken);
         }
 
@@ -38,6 +38,7 @@ namespace AppointmentReminder.Core
             var appts = db.GetAppointments(StartDay, EndDay).ToList();
             var employees = db.GetEmployees().ToList();
 
+            //Set employee for each transation
             foreach (var app in appts)
                 app.Employee = employees.First(m => app.EmployeeID == m.EmployeeID);
 

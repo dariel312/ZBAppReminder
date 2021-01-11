@@ -23,7 +23,7 @@ namespace AppointmentReminder.CLI
 
             var tomorrow = DateTime.Now.AddDays(1);
 #if DEBUG
-            tomorrow = new DateTime(2020, 12, 1);
+            tomorrow = new DateTime(2020, 11, 30);
             reminder.Output = Console.Out; //For testing output to console
             reminder.CheckSendTextReminders(tomorrow, tomorrow);
             Console.ReadLine();

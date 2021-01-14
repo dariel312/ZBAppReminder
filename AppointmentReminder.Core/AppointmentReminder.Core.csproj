@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Services\AppointmentDBContext.cs" />
+    <Compile Include="Services\ZoomService.cs" />
     <Compile Include="ZBAppReminder.cs" />
     <Compile Include="Services\AppSettings.cs" />
     <Compile Include="Models\Customer.cs" />

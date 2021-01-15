@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Zoom.Models.cs" />
     <Compile Include="Services\AppointmentDBContext.cs" />
     <Compile Include="Services\ZoomService.cs" />
     <Compile Include="ZBAppReminder.cs" />

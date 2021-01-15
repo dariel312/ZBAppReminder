@@ -3,12 +3,118 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Newtonsoft.Json;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Net.Http;
+using AppointmentReminder.Core.Models.Zoom;
 
-namespace AppointmentReminder.Core.Services
+namespace AppointmentReminder.Core
 {
+    /// <summary>
+    /// Service for interfacing with Zoom API with JWT authentication
+    /// </summary>
     public class ZoomService
     {
+        const string ZOOM_HOST = "https://api.zoom.us/v2";
 
+        string apiKey;
+        string apiSecret;
+        HttpClient client;
 
+        /// <summary>
+        /// Creates Zoom service with Zoom API Credentials
+        /// </summary>
+        /// <param name="ApiKey"></param>
+        /// <param name="ApiSecret"></param>
+        public ZoomService(string ApiKey, string ApiSecret)
+        {
+            this.apiKey = ApiKey;
+            this.apiSecret = ApiSecret;
+            client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {this.CreateJWT()}");
+        }
+
+        /// <summary>
+        /// List zoom users
+        /// </summary>
+        /// <returns></returns>
+        public async Task<UserPageResponse> ListUsers()
+        {
+            var resp = await client.GetAsync(ZOOM_HOST + "/users");
+            var data = await resp.Content.ReadAsStringAsync();
+            var model = JsonConvert.DeserializeObject<UserPageResponse>(data);
+
+            var dic = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(data);
+            var users = dic["users"];
+            Console.WriteLine(users);
+            model.data = JsonConvert.DeserializeObject<List<UserModel>>(users);
+            return model;
+        }
+
+        /// <summary>
+        /// List zoom meetings
+        /// </summary>
+        /// <returns></returns>
+        public async Task<UserPageResponse> ListMeetings(string UserId)
+        {
+            var resp = await client.GetAsync(ZOOM_HOST + $"/users/{UserId}/meetings");
+            var data = await resp.Content.ReadAsStringAsync();
+            var model = JsonConvert.DeserializeObject<UserPageResponse>(data);
+            return model;
+        }
+
+        /// <summary>
+        /// Create JWT for API Calls
+        /// </summary>
+        /// <returns></returns>
+        public string CreateJWT()
+        {
+
+            try
+            {
+                // Generating the token 
+                var now = DateTime.UtcNow;
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64),
+                };
+
+                var handler = new JwtSecurityTokenHandler();
+                var signingKey = new SigningCredentials(
+                   new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(this.apiSecret)),
+                   SecurityAlgorithms.HmacSha256
+                ); ;
+
+                //create actual token
+                var token = new JwtSecurityToken(
+                    issuer: apiKey,
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddHours(1),
+                    signingCredentials: signingKey
+                );
+
+                return handler.WriteToken(token);
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                Console.WriteLine(
+                     new System.Diagnostics.StackTrace().ToString()
+                );
+            }
+            return null;
+
+        }
+
+        //Helper
+        private int ToUnixEpochDate(DateTime Time)
+        {
+            TimeSpan t = Time - new DateTime(1970, 1, 1);
+            return (int)t.TotalSeconds;
+        }
     }
 }

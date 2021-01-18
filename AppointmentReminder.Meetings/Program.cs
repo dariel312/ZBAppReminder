@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppointmentReminder.Core;
+using AppointmentReminder.Core.Models.Zoom;
+using Newtonsoft.Json;
 
 namespace AppointmentReminder.Meetings
 {
@@ -11,13 +14,15 @@ namespace AppointmentReminder.Meetings
     {
         static async Task Main(string[] args)
         {
-            var zoom = new ZoomService("", "");
-            var jwt = zoom.CreateJWT();
-            var resp =  await zoom.ListUsers();
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            var config = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(baseDir + "settings.json"));
+            
+            //services
+            var cap = new AppointmentDBContext(config.DataBasePath);
+            var zoom = new ZoomService(config.ZoomAPIKey, config.ZoomAPISecret);
 
-            Console.WriteLine(jwt);
-            Console.WriteLine(resp.data.Count());
-            Console.ReadLine();
+            //main functionality
+            var sync = new AppointmentSync(config, cap, zoom);
         }
     }
 }

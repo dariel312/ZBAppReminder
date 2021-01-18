@@ -14,5 +14,7 @@ namespace AppointmentReminder.Core
         public string DataBasePath { get; set; }
         public string ReminderMessage { get; set; }
         public string ErrorLogPhone { get; set; }
+        public string ZoomAPIKey { get; set; }
+        public string ZoomAPISecret { get; set; }
     }
 }

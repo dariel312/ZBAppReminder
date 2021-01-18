@@ -31,8 +31,8 @@ namespace AppointmentReminder.Core
 
             var sqlCmd = "SELECT Transactions.*, Customers.* FROM Transactions INNER JOIN Customers ON Transactions.CustID = Customers.CustID WHERE StartTime > #" + StartTime.ToString("d") + " 12:00:00 AM# AND StartTime < #" + EndTime.ToString("d") + " 11:59:00 PM# ";
 
-            OleDbDataReader reader = null;
-            using (executeQuery(sqlCmd, out reader))
+
+            using (executeQuery(sqlCmd, out var reader))
             {
                 while (reader.Read())
                 {
@@ -42,6 +42,7 @@ namespace AppointmentReminder.Core
                         StartTime = (DateTime)reader["StartTime"],
                         EmployeeID = (int)reader["EmpID"],
                         CustomerID = (int)reader["Transactions.CustID"],
+                        Note = (string)reader["Transactions.Note"],
                         Customer = new Customer()
                         {
                             CustomerID = (int)reader["Customers.CustID"],

@@ -45,13 +45,8 @@ namespace AppointmentReminder.Core
         {
             var resp = await client.GetAsync(ZOOM_HOST + "/users");
             var data = await resp.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<UserPageResponse>(data);
 
-            var dic = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(data);
-            var users = dic["users"];
-            Console.WriteLine(users);
-            model.data = JsonConvert.DeserializeObject<List<UserModel>>(users);
-            return model;
+            return UserPageResponse.FromJSON(data);
         }
 
         /// <summary>
@@ -63,6 +58,21 @@ namespace AppointmentReminder.Core
             var resp = await client.GetAsync(ZOOM_HOST + $"/users/{UserId}/meetings");
             var data = await resp.Content.ReadAsStringAsync();
             var model = JsonConvert.DeserializeObject<UserPageResponse>(data);
+            return model;
+        }
+
+        /// <summary>
+        /// Creates a meeting in Zoom
+        /// </summary>
+        /// <param name="UserId">Host of the User</param>
+        /// <param name="request">Meeting details</param>
+        /// <returns></returns>
+        public async Task<MeetingModel> CreateMeeting(string UserId, CreateMeetingRequest request)
+        {
+            var resp = await client.PostAsync(ZOOM_HOST + $"/users/{UserId}/meetings", toJson(request));
+            var body = await resp.Content.ReadAsStringAsync();
+            var model = JsonConvert.DeserializeObject<MeetingModel>(body);
+
             return model;
         }
 
@@ -115,6 +125,13 @@ namespace AppointmentReminder.Core
         {
             TimeSpan t = Time - new DateTime(1970, 1, 1);
             return (int)t.TotalSeconds;
+        }
+
+
+        private StringContent toJson(object body)
+        {
+            var model = JsonConvert.SerializeObject(body);
+            return new StringContent(model, Encoding.UTF8, "application/json");
         }
     }
 }

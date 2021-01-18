@@ -53,11 +53,11 @@ namespace AppointmentReminder.Core
         /// List zoom meetings
         /// </summary>
         /// <returns></returns>
-        public async Task<UserPageResponse> ListMeetings(string UserId)
+        public async Task<MeetingListResponse> ListMeetings(string UserId, int PageSize = 300)
         {
-            var resp = await client.GetAsync(ZOOM_HOST + $"/users/{UserId}/meetings");
+            var resp = await client.GetAsync(ZOOM_HOST + $"/users/{UserId}/meetings?page_size={PageSize}");
             var data = await resp.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<UserPageResponse>(data);
+            var model = JsonConvert.DeserializeObject<MeetingListResponse>(data);
             return model;
         }
 

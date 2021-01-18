@@ -76,12 +76,12 @@ namespace AppointmentReminder.Core.Models.Zoom
     public class MeetingSettings
     {
         public bool host_video { get; set; } = false;
-        public bool participant_video { get; set; }  = false;
+        public bool participant_video { get; set; } = false;
         public bool cn_meeting { get; set; } = false;
         public bool in_meeting { get; set; } = false;
         public bool join_before_host { get; set; } = false;
         public bool mute_upon_entry { get; set; } = true;
-        public bool watermark { get; set; } 
+        public bool watermark { get; set; }
         public bool use_pmi { get; set; }
         public int approve_type { get; set; }
         public int registration_type { get; set; }
@@ -118,6 +118,29 @@ namespace AppointmentReminder.Core.Models.Zoom
         public string join_url { get; set; }
         public string password { get; set; }
         public MeetingSettings settings { get; set; }
+    }
+
+    public class MeetingListItem
+    {
+        public string uuid { get; set; }
+        public long id { get; set; }
+        public string host_id { get; set; }
+        public string topic { get; set; }
+        public MeetingType type { get; set; }
+        public DateTimeOffset start_time { get; set; }
+        public int duration { get; set; }
+        public string timezone { get; set; }
+        public DateTimeOffset created_at { get; set; }
+        public string join_Url { get; set; }
+
+    }
+
+    public class MeetingListResponse
+    {
+        public int page_size { get; set; }
+        public int total_records { get; set; }
+        public string next_page_token { get; set; }
+        public IEnumerable<MeetingListItem> meetings { get; set; }
     }
 
     /// <summary>

@@ -29,7 +29,9 @@ namespace AppointmentReminder.Core
         {
             var apps = new List<Transaction>();
 
-            var sqlCmd = "SELECT Transactions.*, Customers.* FROM Transactions INNER JOIN Customers ON Transactions.CustID = Customers.CustID WHERE StartTime > #" + StartTime.ToString("d") + " 12:00:00 AM# AND StartTime < #" + EndTime.ToString("d") + " 11:59:00 PM# ";
+            var sqlCmd = $@"SELECT Transactions.*, Customers.* 
+                            FROM Transactions INNER JOIN Customers ON Transactions.CustID = Customers.CustID 
+                            WHERE StartTime > #{ StartTime.ToString("d")} 12:00:00 AM# AND StartTime < #{ EndTime.ToString("d")} 11:59:00 PM# ";
 
 
             using (executeQuery(sqlCmd, out var reader))
@@ -40,9 +42,9 @@ namespace AppointmentReminder.Core
                     {
                         TransactionID = (int)reader["TranID"],
                         StartTime = (DateTime)reader["StartTime"],
+                        EndTime = (DateTime)reader["EndTime"],
                         EmployeeID = (int)reader["EmpID"],
                         CustomerID = (int)reader["Transactions.CustID"],
-                        Note = (string)reader["Transactions.Note"],
                         Customer = new Customer()
                         {
                             CustomerID = (int)reader["Customers.CustID"],

@@ -11,7 +11,7 @@ namespace AppointmentReminder.Core
         public string AccountSID { get; set; }
         public string AuthToken { get; set; }
         public string TwilioPhone { get; set; }
-        public string DataBasePath { get; set; }
+        public string CAPDBPath { get; set; }
         public string ReminderMessage { get; set; }
         public string ErrorLogPhone { get; set; }
         public string ZoomAPIKey { get; set; }

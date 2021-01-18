@@ -29,11 +29,11 @@ namespace AppointmentReminder.Core.Models
     {
         public int TransactionID { get; set; }
         public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public int CustomerID { get; set; }
         public int EmployeeID { get; set; }
         public Employee Employee { get; set; }
         public Customer Customer { get; set; }
-        public string Note { get; set; }
 
     }
 }

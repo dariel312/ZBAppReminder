@@ -24,7 +24,7 @@ namespace AppointmentReminder.Core
         public ZBAppReminder(AppSettings Config)
         {
             this.config = Config;
-            this.db = new AppointmentDBContext(config.DataBasePath);
+            this.db = new AppointmentDBContext(config.CAPDBPath);
             TwilioClient.Init(config.AccountSID, config.AuthToken);
         }
 

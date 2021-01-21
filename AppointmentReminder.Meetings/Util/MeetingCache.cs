@@ -13,6 +13,8 @@ namespace AppointmentReminder.Meetings
         public int TranId { get; set; }
         public long ZoomId { get; set; }
         public string JoinUrl { get; set; }
+        public DateTimeOffset StartTime { get; set; }
+        public DateTimeOffset EndTime { get; set; }
     }
 
     public class MeetingCache : IDisposable

@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Net.Http;
 using AppointmentReminder.Core.Models.Zoom;
+using AppointmentReminder.Core.Util;
 
 namespace AppointmentReminder.Core
 {
@@ -70,6 +71,21 @@ namespace AppointmentReminder.Core
         public async Task<MeetingModel> CreateMeeting(string UserId, CreateMeetingRequest request)
         {
             var resp = await client.PostAsync(ZOOM_HOST + $"/users/{UserId}/meetings", toJson(request));
+            var body = await resp.Content.ReadAsStringAsync();
+            var model = JsonConvert.DeserializeObject<MeetingModel>(body);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Update a meeting in Zoom
+        /// </summary>
+        /// <param name="UserId">Host of the User</param>
+        /// <param name="request">Meeting details</param>
+        /// <returns></returns>
+        public async Task<MeetingModel> UpdateMeeting(string MeetingId, CreateMeetingRequest request)
+        {
+            var resp = await client.PatchAsync(ZOOM_HOST + $"/meetings/{MeetingId}", toJson(request));
             var body = await resp.Content.ReadAsStringAsync();
             var model = JsonConvert.DeserializeObject<MeetingModel>(body);
 

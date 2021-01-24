@@ -19,6 +19,8 @@ ZBAppReminder is an integration with a Vendor software called Customer Appointme
   * Build using Visual Studio 
 
 ## Settings File
+The settings file includes all configuration needed to run the project. See `/settings.example.json` file for an example file.
+
 Property | Description
 ------------ | -------------
 TwilioAccountSID | Account ID API Key from Twilio

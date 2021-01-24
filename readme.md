@@ -1,7 +1,7 @@
 # ZBAppReminder
 
 ## Overview
-ZBAppReminder is an integration with a Vendor software called Customer Appointment Manager. The vendor software uses an Access Databse to manage all date. ZBApp reminder reads the contents of the database to send text reminders to customers about their appointments and to schedule zoom meetings with customers (due to COVID).
+ZBAppReminder is an integration with a Vendor software called Customer Appointment Manager. The vendor software uses an Access Databse to manage all data. ZBAppReminder reads the contents of the database to send text reminders to customers about their appointments and to schedule zoom meetings with customers (due to COVID).
 
 ## Dependencies
 * .Net Framework 4.6.1

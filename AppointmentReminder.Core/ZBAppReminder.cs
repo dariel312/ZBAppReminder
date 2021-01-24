@@ -25,11 +25,11 @@ namespace AppointmentReminder.Core
         {
             this.config = Config;
             this.db = new AppointmentDBContext(config.CAPDBPath);
-            TwilioClient.Init(config.AccountSID, config.AuthToken);
+           
         }
 
         /// <summary>
-        /// Checks DB for Appointsments between Start and End Date then sends reminders.
+        /// Checks DB for Appointments between Start and End Date then sends reminders.
         /// </summary>
         /// <param name="StartDay"></param>
         /// <param name="EndDay"></param>
@@ -81,12 +81,13 @@ namespace AppointmentReminder.Core
 
             return apps;
         }
+
         private string sendReminder(Transaction app)
         {
-            string text = config.ReminderMessage.Replace("\\n", "\n");
+            string text = config.ReminderMsg.Replace("\\n", "\n");
             string message = string.Format(text, app.Employee.FirstName, app.StartTime.ToString("t"));
 
-            return PhoneService.SendMessage(app.Customer.Telephone, config.TwilioPhone, message);
+            return PhoneService.SendMessage(app.Customer.Telephone, config.TwilioFromPhone, message);
         }
 
     }

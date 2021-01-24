@@ -73,6 +73,16 @@ namespace AppointmentReminder.Core.Models.Zoom
 
     }
 
+    /// <summary>
+    /// Model to update meeting 
+    /// Note: Many missing fields, as we only want to update time for now since C# will include nulls
+    /// </summary>
+    public class UpdateMeetingRequest
+    {
+        public DateTime start_time { get; set; }
+        public int duration { get; set; }
+    }
+
     public class MeetingSettings
     {
         public bool host_video { get; set; } = false;

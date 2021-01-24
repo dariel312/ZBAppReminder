@@ -13,8 +13,12 @@ namespace AppointmentReminder.Meetings
         public int TranId { get; set; }
         public long ZoomId { get; set; }
         public string JoinUrl { get; set; }
+        public string Password { get; set; }
+        public string CustomerPhone { get; set; }
         public DateTimeOffset StartTime { get; set; }
         public DateTimeOffset EndTime { get; set; }
+        public DateTimeOffset Created { get; set; }
+        public DateTimeOffset Updated { get; set; }
     }
 
     public class MeetingCache : IDisposable
@@ -41,13 +45,23 @@ namespace AppointmentReminder.Meetings
             return res;
         }
 
-        public bool AddMeeting(CachedMeeting Body)
+        public bool CacheMeeting(CachedMeeting Body)
         {
             var exists = this.GetMeeting(Body.TranId) != null;
 
             //remove if exists
             if (exists)
+            {
                 this.RemoveMeeting(Body);
+            }
+            else
+            {
+                //set creation time
+                Body.Created = DateTimeOffset.Now;
+            }
+
+
+            Body.Updated = DateTimeOffset.Now;
 
             //add new
             this.meetings.Add(Body);
@@ -60,6 +74,23 @@ namespace AppointmentReminder.Meetings
             this.meetings.RemoveAt(this.meetings.IndexOf(Body));
         }
 
+
+        public void RemoveBefore(DateTimeOffset StartTime)
+        {
+            this.meetings.RemoveAll(m => m.StartTime < StartTime);
+        }
+
+        /// <summary>
+        /// Returns the set difference of meetings which no 
+        /// </summary>
+        /// <param name="Transactions"></param>
+        public IEnumerable<CachedMeeting> Except(IEnumerable<int> Transactions)
+        {
+            var ids = this.meetings.Select(m => m.TranId);
+            var result = ids.Except(Transactions);
+
+            return this.meetings.Where(m => result.Contains(m.TranId));
+        }
 
         public void Flush()
         {

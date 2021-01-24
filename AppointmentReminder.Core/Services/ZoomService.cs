@@ -72,9 +72,28 @@ namespace AppointmentReminder.Core
         {
             var resp = await client.PostAsync(ZOOM_HOST + $"/users/{UserId}/meetings", toJson(request));
             var body = await resp.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<MeetingModel>(body);
 
+
+            if ((int)resp.StatusCode != 201)
+                throw new Exception(body);
+
+            var model = JsonConvert.DeserializeObject<MeetingModel>(body);
             return model;
+        }
+
+        /// <summary>
+        /// Deletes a meeting in Zoom
+        /// </summary>
+        /// <param name="UserId">Host of the User</param>
+        /// <param name="request">Meeting details</param>
+        /// <returns></returns>
+        public async Task DeleteMeeting(long MeetingId)
+        {
+            var resp = await client.DeleteAsync(ZOOM_HOST + $"/meetings/{MeetingId.ToString()}");
+            var body = await resp.Content.ReadAsStringAsync();
+
+            if ((int)resp.StatusCode != 204)
+                throw new Exception(body);
         }
 
         /// <summary>
@@ -83,13 +102,15 @@ namespace AppointmentReminder.Core
         /// <param name="UserId">Host of the User</param>
         /// <param name="request">Meeting details</param>
         /// <returns></returns>
-        public async Task<MeetingModel> UpdateMeeting(string MeetingId, CreateMeetingRequest request)
+        public async Task<bool> UpdateMeeting(long MeetingId, UpdateMeetingRequest request)
         {
-            var resp = await client.PatchAsync(ZOOM_HOST + $"/meetings/{MeetingId}", toJson(request));
+            var resp = await client.PatchAsync(ZOOM_HOST + $"/meetings/{MeetingId.ToString()}", toJson(request));
             var body = await resp.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<MeetingModel>(body);
 
-            return model;
+            if((int)resp.StatusCode != 204)
+                throw new Exception(body);
+
+            return true;
         }
 
         /// <summary>

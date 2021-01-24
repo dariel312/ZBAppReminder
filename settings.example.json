@@ -1,0 +1,20 @@
+﻿{
+  "TwilioAccountSID": "<xxxxxx>",
+  "TwilioAuthToken": "<xxxxxx>",
+  "TwilioFromPhone": "<xxxxxx>",
+  "CAPDBPath": "C:\\Users\\206496785\\source\\repos\\AppointmentReminder\\ApptDB.mdb",
+  "ReminderMsg": "*REMINDER FROM Z&B Accounting*\nYour appointment with {0} at Z&B Accounting is tomorrow at {1}.\n\nIf you need to cancel your appointment do not respond to this message. Please call us at (305) 557-2389 or visit our office at 7135 West 3rd CT, Hialeah FL 33014.",
+  "ErrorLogPhone": "<xxxxxx>",
+  "ZoomAPIKey": "<xxxxxx>",
+  "ZoomAPISecret": "<xxxxxx>",
+  "CacheFilePath": "./meeting.cache.json",
+  "MeetingCreatedMsg": "*Z&B Accounting*\nYour appointment with {0} has been scheduled for {1}.\n\nIf you need to cancel your appointment DO NOT respond to this message. Please call us at (305) 557-2389.\n\nYour appointment is scheduled on Zoom, please use link below at the time of your appointment.\n\n{2}\nPassword: {3}",
+  "MeetingUpdateMsg": "*Z&B Accounting*\nYour appointment with {0} has been MOVED to {1}.\n\nIf you need to cancel your appointment DO NOT respond to this message. Please call us at (305) 557-2389.\n\nYour appointment is scheduled on Zoom, please use link below at the time of your appointment.\n\n{2}\nPassword: {3}",
+  "MeetingDeletedMsg": "*Z&B Accounting*\nYour appointment at {0} has been CANCELLED.\n\nIf you have any questions DO NOT respond to this message. Please call us at (305) 557-2389.",
+  "Employees": [
+    {
+      "EmpId": 0,
+      "ZoomId": "<xxxxxx>"
+    }
+  ]
+}

@@ -13,9 +13,25 @@ namespace AppointmentReminder.CLI
     {
         static void Main(string[] args)
         {
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            var config = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(baseDir + "settings.json"));
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string configPath = AppDomain.CurrentDomain.BaseDirectory + "settings.json";
+            if (args.Length > 0)
+            
+                configPath = args[0];
+
+
+            Console.WriteLine("Using settings path: " + configPath);
+            if (!File.Exists(configPath))
+            {
+                Console.WriteLine("Error: Config file cannot be found in the specified path.");
+                Console.ReadLine();
+                return;
+            }
+
+            var config = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(configPath));
             var reminder = new ZBAppReminder(config);
+
+            PhoneService.Init(config.TwilioAccountSID, config.TwilioAuthToken);
 
             //check create logs folder
             if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + Logs.LogFolderName))
@@ -23,7 +39,7 @@ namespace AppointmentReminder.CLI
 
             var tomorrow = DateTime.Now.AddDays(1);
 #if DEBUG
-            tomorrow = new DateTime(2020, 11, 30);
+            tomorrow = new DateTime(2021, 5, 31);
             reminder.Output = Console.Out; //For testing output to console
             reminder.CheckSendTextReminders(tomorrow, tomorrow);
             Console.ReadLine();
